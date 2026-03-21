@@ -1,0 +1,38 @@
+{
+  "name": "model-billing-bridge-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "test:setup": "DATABASE_URL=\"file:./prisma/test.db\" npx prisma db push --skip-generate",
+    "test": "npm run test:setup && vitest run"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcryptjs": "^2.4.3",
+    "next": "^14.2.0",
+    "next-auth": "^4.24.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "stripe": "^17.4.0"
+  },
+  "devDependencies": {
+    "@rollup/rollup-darwin-arm64": "^4.59.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0",
+    "vitest": "^2.1.9"
+  }
+}

@@ -1,0 +1,32 @@
+/* Model Billing Bridge - 悬浮按钮样式 */
+
+.model-billing-bridge-btn,
+.openclaw-billing-bridge-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2147483646;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #fff;
+  background: rgba(79, 70, 229, 0.9);
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.model-billing-bridge-btn:hover,
+.openclaw-billing-bridge-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5);
+  background: rgba(79, 70, 229, 1);
+}
+
+.model-billing-bridge-btn:active,
+.openclaw-billing-bridge-btn:active {
+  transform: translateY(0);
+}

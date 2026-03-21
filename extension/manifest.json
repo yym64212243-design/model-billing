@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Model Billing Bridge",
+  "version": "1.0.0",
+  "description": "Minimal-permission bridge to model credits billing. Opens billing from ChatGPT, Claude, Gemini, and more.",
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://chat.openai.com/*",
+        "*://*.chatgpt.com/*",
+        "*://chatgpt.com/*",
+        "*://*.openai.com/*",
+        "*://claude.ai/*",
+        "*://*.claude.ai/*",
+        "*://*.anthropic.com/*",
+        "*://gemini.google.com/*",
+        "*://bard.google.com/*",
+        "*://*.openclaw.io/*",
+        "*://openclaw.io/*",
+        "*://*.openclaw.com/*",
+        "*://openclaw.com/*",
+        "*://localhost/*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

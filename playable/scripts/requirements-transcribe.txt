@@ -1,0 +1,3 @@
+# 真实音频转谱依赖（用于 scripts/transcribe_audio.py）
+# 安装: pip install -r scripts/requirements-transcribe.txt
+aubio>=0.4.9

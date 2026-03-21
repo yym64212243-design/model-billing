@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --playable-primary: #1a1a2e;
+  --playable-secondary: #16213e;
+  --playable-accent: #e94560;
+  --playable-surface: #0f0f1a;
+  --playable-muted: #a0a0b0;
+  --waterfall-left: #3b82f6;
+  --waterfall-right: #ec4899;
+}
+
+[data-theme="warm"] {
+  --playable-primary: #2d1810;
+  --playable-secondary: #4a2c1a;
+  --playable-accent: #e07c4a;
+  --playable-surface: #1a0f0a;
+  --playable-muted: #b8a090;
+  --waterfall-left: #d97706;
+  --waterfall-right: #ea580c;
+}
+
+[data-theme="cool"] {
+  --playable-primary: #0f172a;
+  --playable-secondary: #1e293b;
+  --playable-accent: #38bdf8;
+  --playable-surface: #020617;
+  --playable-muted: #94a3b8;
+  --waterfall-left: #0ea5e9;
+  --waterfall-right: #a78bfa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply antialiased text-gray-100 bg-playable-surface min-h-screen;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* iPad 横屏友好：大触控区域 */
+@media (min-width: 1024px) {
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}

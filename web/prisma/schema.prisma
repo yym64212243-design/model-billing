@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String?
+  credits      Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  orders        Order[]
+  creditLedgers CreditLedger[]
+}
+
+model Plan {
+  id          String   @id
+  name        String
+  description String
+  price       Int      // cents
+  currency    String   // e.g. AUD
+  credits     Int
+  isActive    Boolean  @default(true)
+  popular     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders Order[]
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  userId          String
+  planId          String
+  amount          Int
+  currency        String
+  credits         Int
+  status          String        @default("PENDING") // PENDING / PAID / FAILED / CANCELLED
+  paymentMethod   String        @default("MANUAL")  // STRIPE / ALIPAY / WECHAT / MANUAL
+  externalOrderId String?
+  reference       String?
+  createdAt       DateTime      @default(now())
+  paidAt          DateTime?
+  refundedCredits Int           @default(0)
+  refundedAt      DateTime?
+  updatedAt       DateTime      @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id])
+  plan         Plan          @relation(fields: [planId], references: [id])
+  payments     Payment[]
+  creditLedgers CreditLedger[]
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+  @@index([paymentMethod, createdAt])
+  @@index([refundedAt])
+}
+
+model Payment {
+  id               String        @id @default(cuid())
+  orderId          String
+  provider         String        // STRIPE / ALIPAY / WECHAT / MANUAL
+  providerTradeNo  String?
+  providerPayload  String?       // JSON string for SQLite compatibility
+  status           String        @default("PENDING") // PENDING / SUCCEEDED / FAILED / CANCELLED
+  createdAt        DateTime      @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId, createdAt])
+  @@index([provider, createdAt])
+}
+
+model CreditLedger {
+  id           String           @id @default(cuid())
+  userId       String
+  orderId      String?
+  originalLedgerId String?      // for refunding a specific deduction
+  changeAmount Int
+  type         String           // PURCHASE / DEDUCTION / REFUND / ADMIN_ADJUST
+  balanceAfter Int
+  note         String?
+  idempotencyKey String?        // prevents duplicate deductions
+  metadata     String?          // JSON string for audit/debug
+  createdAt    DateTime         @default(now())
+
+  user  User   @relation(fields: [userId], references: [id])
+  order Order? @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([orderId])
+  @@index([originalLedgerId])
+  @@unique([orderId, type])
+  @@unique([userId, idempotencyKey])
+  @@unique([originalLedgerId, type])
+}
