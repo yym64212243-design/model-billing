@@ -2,12 +2,34 @@
 
 import type { PlanId, PlanItem } from '@/lib/constants';
 
+export type PaymentToggles = {
+  zpay: boolean;
+  alipayPage: boolean;
+  alipayScan: boolean;
+};
+
 interface PricingCardProps {
   plan: PlanItem;
-  onSelect: (planId: PlanId) => void;
+  payments: PaymentToggles;
+  onZpayRedirect: (planId: PlanId) => void;
+  onZpayQr: (planId: PlanId) => void;
+  onAlipayPage: (planId: PlanId) => void;
+  onAlipayScan: (planId: PlanId) => void;
+  busy?: boolean;
 }
 
-export default function PricingCard({ plan, onSelect }: PricingCardProps) {
+export default function PricingCard({
+  plan,
+  payments,
+  onZpayRedirect,
+  onZpayQr,
+  onAlipayPage,
+  onAlipayScan,
+  busy,
+}: PricingCardProps) {
+  const { zpay, alipayPage, alipayScan } = payments;
+  const primary = plan.popular;
+
   return (
     <div
       className={`
@@ -26,16 +48,64 @@ export default function PricingCard({ plan, onSelect }: PricingCardProps) {
         <span className="text-2xl font-bold text-gray-900">{plan.price}</span>
         <span className="ml-1 text-gray-500">{plan.currency}</span>
       </div>
-      <button
-        type="button"
-        onClick={() => onSelect(plan.id)}
-        className={`
-          mt-6 w-full rounded-xl py-3 text-sm font-semibold transition
-          ${plan.popular ? 'bg-primary-600 text-white hover:bg-primary-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}
-        `}
-      >
-        Get Credits
-      </button>
+      <div className="mt-6 flex flex-col gap-3">
+        {!zpay && !alipayPage && !alipayScan && (
+          <p className="text-sm text-gray-500">当前未启用在线支付</p>
+        )}
+        {zpay && (
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">ZPAY</p>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => onZpayRedirect(plan.id)}
+              className={`
+                w-full rounded-xl py-3 text-sm font-semibold transition disabled:opacity-50
+                ${primary ? 'bg-primary-600 text-white hover:bg-primary-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}
+              `}
+            >
+              ZPAY 跳转支付
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => onZpayQr(plan.id)}
+              className="w-full rounded-xl border border-primary-200 bg-white py-3 text-sm font-semibold text-primary-700 transition hover:bg-primary-50 disabled:opacity-50"
+            >
+              ZPAY 扫码
+            </button>
+          </div>
+        )}
+
+        {(alipayPage || alipayScan) && (
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">支付宝直连</p>
+            {alipayPage && (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => onAlipayPage(plan.id)}
+                className={`
+                  w-full rounded-xl py-3 text-sm font-semibold transition disabled:opacity-50
+                  ${!zpay && primary ? 'bg-primary-600 text-white hover:bg-primary-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}
+                `}
+              >
+                支付宝网页支付
+              </button>
+            )}
+            {alipayScan && (
+              <button
+                type="button"
+                disabled={busy}
+                onClick={() => onAlipayScan(plan.id)}
+                className="w-full rounded-xl border border-primary-200 bg-white py-3 text-sm font-semibold text-primary-700 transition hover:bg-primary-50 disabled:opacity-50"
+              >
+                支付宝扫码（当面付）
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

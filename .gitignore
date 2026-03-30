@@ -1,12 +1,15 @@
-.env
-.env.*
-!.env.example
-node_modules
-.next
-dist
-build
-__pycache__
-*.pyc
+# Local secrets
+.env.local
+web/.env
+web/*.pem
+web/*key*.txt
+# Build/cache
+**/.next/
+**/node_modules/
+**/*.tsbuildinfo
+# Local DB
+web/prisma/*.db
+# macOS / editor
 .DS_Store
-.cursor
-*.db
+**/.DS_Store
+.cursor/
