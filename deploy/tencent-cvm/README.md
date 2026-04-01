@@ -12,7 +12,7 @@
 在项目根目录（含 `deploy/tencent-cvm/bootstrap.sh`）执行：
 
 ```bash
-cd "/Users/wuyuantong/Library/Containers/com.tencent.xinWeChat/Data/Documents/xwechat_files/wxid_g203yqczqy1i22_8dc8/msg/file/2026-03/model-billing"
+cd /path/to/model-billing   # 本机 Model Billing Bridge 仓库根目录
 
 ssh root@119.28.129.147 'bash -s' < deploy/tencent-cvm/bootstrap.sh
 ```
