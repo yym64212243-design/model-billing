@@ -4,6 +4,7 @@ import SourceBadge from '@/components/SourceBadge';
 import UserHeader from '@/components/UserHeader';
 import PricingSection from './PricingSection';
 import UsageDemoPanel from './UsageDemoPanel';
+import ApiKeyPanel from './ApiKeyPanel';
 
 type SearchParams = {
   source?: string;
@@ -46,6 +47,7 @@ export default function BillingPage({
         <div className="mt-10">
           <UsageDemoPanel />
         </div>
+        <ApiKeyPanel />
 
         <section className="mt-12">
           <h2 className="text-center text-lg font-semibold text-gray-800">Choose a plan</h2>

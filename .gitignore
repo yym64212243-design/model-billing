@@ -3,12 +3,13 @@
 web/.env
 web/*.pem
 web/*key*.txt
+gateway/.env
 # Build/cache
 **/.next/
 **/node_modules/
 **/*.tsbuildinfo
 # Local DB
-web/prisma/*.db
+web/prisma/**/*.db
 # macOS / editor
 .DS_Store
 **/.DS_Store

@@ -6,6 +6,7 @@
 
 - **Chrome 扩展**：在支持的 AI 网页右下角注入「Open Billing」按钮，带 `return_url` 便于支付后返回原页面
 - **Next.js Billing 站**：登录/注册、套餐选择、支付宝支付、真实余额、成功页返回来源应用
+- **Gateway（可选）**：`gateway/` 最小中转服务，转发 `/v1/chat/completions` 到 Billing OpenAI 代理
 
 ---
 

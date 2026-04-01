@@ -1,0 +1,16 @@
+{
+  "name": "model-billing-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal gateway that forwards chat requests to Model Billing OpenAI proxy.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "NODE_ENV=production node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2"
+  }
+}

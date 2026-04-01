@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, name } = body as { email?: string; password?: string; name?: string };
+    const { email, password } = body as { email?: string; password?: string; name?: string };
     if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
       return NextResponse.json(
         { error: 'Email and password are required' },
@@ -21,13 +21,11 @@ export async function POST(request: Request) {
       data: {
         email,
         passwordHash,
-        name: name && typeof name === 'string' ? name : null,
       },
     });
     return NextResponse.json({
       id: user.id,
       email: user.email,
-      name: user.name,
     });
   } catch (e) {
     console.error('Register error:', e);

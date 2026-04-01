@@ -17,6 +17,7 @@ model User {
 
   orders        Order[]
   creditLedgers CreditLedger[]
+  apiKeys       UserApiKey[]
 }
 
 model Plan {
@@ -99,4 +100,22 @@ model CreditLedger {
   @@unique([orderId, type])
   @@unique([userId, idempotencyKey])
   @@unique([originalLedgerId, type])
+}
+
+model UserApiKey {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String   @default("default")
+  keyHash    String   @unique
+  keyPrefix  String
+  last4      String
+  isActive   Boolean  @default(true)
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, isActive, createdAt])
 }
