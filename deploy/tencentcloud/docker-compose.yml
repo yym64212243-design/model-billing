@@ -1,0 +1,38 @@
+services:
+  web:
+    build:
+      context: ../../web
+      dockerfile: Dockerfile
+    env_file:
+      - ./web.env
+    restart: unless-stopped
+    depends_on:
+      - gateway
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - web_data:/app/data
+    networks:
+      - openclaw
+
+  gateway:
+    build:
+      context: ../../gateway
+      dockerfile: Dockerfile
+    env_file:
+      - ./gateway.env
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - gateway_data:/data
+    networks:
+      - openclaw
+
+volumes:
+  web_data:
+  gateway_data:
+
+networks:
+  openclaw:
+    driver: bridge
