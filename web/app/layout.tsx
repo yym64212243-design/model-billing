@@ -3,8 +3,8 @@ import './globals.css';
 import Providers from '@/components/Providers';
 
 export const metadata: Metadata = {
-  title: 'Model Billing Bridge',
-  description: 'Credits billing for ChatGPT, Claude, Gemini, and other AI tools',
+  title: 'OpenClaw',
+  description: 'Unified billing, API key management, and usage tracking for OpenClaw users.',
 };
 
 export default function RootLayout({

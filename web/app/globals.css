@@ -4,10 +4,222 @@
 
 :root {
   --foreground: #0f172a;
-  --background: #f8fafc;
+  --background: #ffffff;
+  /* 8px 栅格参考（与 Tailwind spacing 一致：1 = 4px，2 = 8px …） */
+  --section-y-sm: 4rem;
+  --section-y-lg: 6rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .btn-primary:hover,
+  .btn-primary:active,
+  .btn-secondary:hover,
+  .btn-secondary:active,
+  .card-hover:hover,
+  .logo-hover:hover {
+    transform: none;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .card-hover,
+  .logo-hover,
+  .arrow-hover .arrow-icon {
+    transition: none;
+  }
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ------------------------------------------------------------------ */
+/* 不依赖 Tailwind 的兜底：CSS 未加载或 dev 异常时避免首页装饰层撑爆布局 */
+/* ------------------------------------------------------------------ */
+
+.hero-with-float {
+  position: relative;
+  overflow: hidden;
+}
+
+.floating-brands-root {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .floating-brands-root {
+    display: block;
+  }
+}
+
+.nav-logo-mark {
+  width: 2rem;
+  height: 2rem;
+  min-width: 2rem;
+  min-height: 2rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: linear-gradient(to bottom right, #6366f1, #9333ea);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+}
+
+/* 主按钮：深色，hover / active / focus-visible 完整状态 */
+.btn-primary {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.15s ease;
+}
+.btn-primary:hover {
+  transform: scale(1.03);
+  background-color: #1f2937;
+  box-shadow: 0 10px 28px -8px rgba(0, 0, 0, 0.22);
+}
+.btn-primary:active {
+  transform: scale(0.98);
+  background-color: #111827;
+}
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px #6366f1,
+    0 10px 28px -8px rgba(0, 0, 0, 0.18);
+}
+
+/* 次按钮：描边，hover / active / focus-visible */
+.btn-secondary {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+.btn-secondary:hover {
+  transform: scale(1.03);
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  box-shadow: 0 10px 28px -10px rgba(0, 0, 0, 0.1);
+}
+.btn-secondary:active {
+  transform: scale(0.98);
+  background-color: #f3f4f6;
+}
+.btn-secondary:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 4px #6366f1;
+}
+
+/* 兼容旧类名：仍用于少量未拆分的按钮 */
+.btn-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-hover:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15);
+}
+.btn-hover:active {
+  transform: scale(0.98);
+}
+
+/* 品牌 Logo：悬停轻微旋转（由 prefers-reduced-motion 兜底） */
+.logo-hover {
+  transition: transform 0.28s ease;
+}
+.logo-hover:hover {
+  transform: rotate(10deg) scale(1.08);
+}
+
+/* 卡片：上浮（由 prefers-reduced-motion 兜底） */
+.card-hover {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px -10px rgba(0, 0, 0, 0.12);
+  border-color: #e5e7eb;
+}
+
+/* 文字链接箭头 */
+.arrow-hover .arrow-icon {
+  transition: transform 0.2s ease;
+}
+.arrow-hover:hover .arrow-icon {
+  transform: translateX(4px);
+}
+
+.link-focus {
+  border-radius: 0.125rem;
+}
+.link-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #a5b4fc;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out both;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(99, 102, 241, 0.15);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
