@@ -68,14 +68,20 @@ cp .env.example .env
 - `NEXTAUTH_URL="http://localhost:3000"`
 - `NEXTAUTH_SECRET`：用 `openssl rand -base64 32` 生成
 - `BILLING_BASE_URL`：Billing 站点基址（如 `http://localhost:3000`）
+- `ZPAY_PID`：ZPAY / 易支付商户 PID
+- `ZPAY_KEY`：ZPAY / 易支付商户 KEY
+- `ZPAY_NOTIFY_URL`：服务端异步通知地址（需公网可访问，且不要带 query）
+- `ZPAY_RETURN_URL`：支付完成后的同步回跳地址（通常为 `/pay/zpay-return`，也不要带 query）
+- `ZPAY_GATEWAY`：默认可用 `https://zpayz.cn`
+
+可选：
+
+- `ZPAY_CID`：平台提供子通道时再填
 - `ALIPAY_APP_ID`：支付宝应用 ID
 - `ALIPAY_PRIVATE_KEY`：你的 RSA2 私钥（PKCS8）
 - `ALIPAY_PUBLIC_KEY`：支付宝公钥（用于异步通知验签）
 - `ALIPAY_GATEWAY`：网关地址（沙箱：`https://openapi.alipaydev.com/gateway.do`）
 - `ALIPAY_NOTIFY_URL`：服务端异步通知地址（需公网可访问）
-
-可选：
-
 - `ALIPAY_RETURN_URL`：覆盖默认同步跳转地址；不填则自动使用 `/success?order=...&return_url=...`
 
 ### 2. 数据库
@@ -96,7 +102,16 @@ npm run dev
 主入口（需先登录）：`http://localhost:3000/billing`。  
 兼容旧链接：`/openclaw` → 301/重定向到 `/billing`。
 
-### 4. 支付宝异步通知（本地联调）
+### 4. ZPAY 回调（推荐）
+
+1. 在支付平台配置异步通知地址（`notify_url`）：
+   `https://你的域名/api/webhooks/zpay`
+2. 配置同步回跳地址（`return_url`）：
+   `https://你的域名/pay/zpay-return`
+3. 确保这两个地址都可公网访问，且都不要带 query string。
+4. 支付成功后，服务端收到异步通知并自动入账积分。
+
+### 5. 支付宝异步通知（可选备用）
 
 1. 在支付宝开放平台配置异步通知地址（`notify_url`）：
    `https://你的域名/api/webhooks/alipay`
@@ -105,7 +120,7 @@ npm run dev
 
 生产环境：使用 HTTPS 域名，核对 `ALIPAY_APP_ID / ALIPAY_PRIVATE_KEY / ALIPAY_PUBLIC_KEY / ALIPAY_NOTIFY_URL` 一致。
 
-### 5. Chrome 扩展
+### 6. Chrome 扩展
 
 1. Chrome 打开 `chrome://extensions/`，开启「开发者模式」
 2. 「加载已解压的扩展程序」→ 选择本项目下的 `extension` 文件夹
@@ -119,8 +134,8 @@ npm run dev
 
 1. 打开 `http://localhost:3000`，先到 `/register` 注册账号，再登录。
 2. 访问 `/billing`（或通过扩展打开），看到当前余额（初始 0）和套餐列表。
-3. 选择套餐 → 跳转支付宝收银台支付。
-4. 支付成功后回到 `/success?order=...&return_url=...`，显示真实订单状态。
+3. 选择套餐 → 默认走 `ZPAY` 支付跳转。
+4. 支付成功后回到 `/pay/zpay-return` 或 `/success?order=...`，显示真实订单状态。
 5. 异步通知触发后用户余额增加；再次进入 `/billing` 可见更新后的余额。
 
 ---

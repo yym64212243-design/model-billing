@@ -56,6 +56,10 @@ cp gateway.env.example gateway.env
   - `NEXTAUTH_SECRET`
   - `BILLING_API_KEY`
   - `GATEWAY_INTERNAL_API_KEY`
+  - `ZPAY_PID`
+  - `ZPAY_KEY`
+  - `ZPAY_NOTIFY_URL=https://billing.example.com/api/webhooks/zpay`
+  - `ZPAY_RETURN_URL=https://billing.example.com/pay/zpay-return`
 - `gateway.env`
   - `UPSTREAM_OPENAI_API_KEY` 或 `CHANNELS_JSON`
   - 与 `web.env` 完全一致的 `BILLING_API_KEY`
@@ -92,6 +96,13 @@ docker compose -f deploy/tencentcloud/docker-compose.yml logs --tail=100 gateway
 - 是否设置了 `UPSTREAM_OPENAI_API_KEY` 或 `CHANNELS_JSON`
 - 密钥是否写错
 - `DATABASE_URL` 是否被改坏
+
+支付相关再额外检查：
+
+- 是否已经配置 `ZPAY_PID / ZPAY_KEY`
+- `ZPAY_NOTIFY_URL` 和 `ZPAY_RETURN_URL` 是否是公网 HTTPS 地址
+- `ZPAY_NOTIFY_URL / ZPAY_RETURN_URL` 不要带 query string
+- 如果暂时不用支付宝，可以先不填 `ALIPAY_*`
 
 ## 5. 配置域名解析
 
@@ -148,7 +159,8 @@ sudo systemctl reload nginx
 2. `https://gateway.example.com/healthz` 是否返回 `ok`
 3. 在门户创建 API Key 是否成功
 4. 用新 Key 请求一次 `https://gateway.example.com/v1/models`
-5. 实际调用一次模型，看 usage 和 credits 是否正常变化
+5. 打开积分页发起一次 `ZPAY` 支付，确认能跳转收银台
+6. 支付完成后检查 `https://billing.example.com/pay/zpay-return` 和余额变动
 
 ## 9. 日常运维
 
