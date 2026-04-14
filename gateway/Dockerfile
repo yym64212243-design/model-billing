@@ -1,13 +1,8 @@
-FROM golang:1.21-bookworm AS builder
-WORKDIR /src
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/gateway ./cmd/server
-
-FROM debian:bookworm-slim AS runner
+FROM node:20-bookworm-slim AS runner
 WORKDIR /app
-COPY --from=builder /out/gateway /app/gateway
-RUN mkdir -p /data
+ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY . .
 EXPOSE 8080
-CMD ["/app/gateway"]
+CMD ["npm", "start"]
