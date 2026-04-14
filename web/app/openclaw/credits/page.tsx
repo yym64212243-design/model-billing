@@ -44,6 +44,7 @@ function CreditsPageContent() {
   const [plans, setPlans] = useState<PlanItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<string[]>([]);
+  const [purchaseBusy, setPurchaseBusy] = useState(false);
 
   const loadCreditsPage = useCallback(async () => {
     setLoading(true);
@@ -95,21 +96,23 @@ function CreditsPageContent() {
 
   const handleSelect = async (planId: PlanId, providerId: PurchaseProviderId) => {
     try {
-      const res = await fetch('/api/manual-payments/create', {
+      setPurchaseBusy(true);
+      const res = await fetch('/api/checkout/zpay/submit-url', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId, provider: providerId }),
+        body: JSON.stringify({ planId, type: 'alipay' }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Failed to create order');
-      if (data.orderId) {
-        const qs = new URLSearchParams({ order: data.orderId, provider: providerId });
-        window.location.href = `/pay/manual?${qs.toString()}`;
+      if (!res.ok) throw new Error(data.error ?? 'Failed to start ZPAY payment');
+      if (typeof data.action === 'string' && data.action.length > 0) {
+        window.location.href = data.action;
         return;
       }
-      throw new Error('No order id');
+      throw new Error('No ZPAY URL returned');
     } catch (e) {
       alert(e instanceof Error ? e.message : 'Failed to create order');
+    } finally {
+      setPurchaseBusy(false);
     }
   };
 
@@ -231,8 +234,8 @@ function CreditsPageContent() {
                               plan={plan}
                               onSelect={(planId) => void handleSelect(planId, provider.id)}
                               ctaLabel={`${provider.name} ${t.pricingCard.getCredits}`}
-                              disabled={!provider.available}
-                              disabledLabel={provider.disabledMessage}
+                              disabled={!provider.available || purchaseBusy}
+                              disabledLabel={!provider.available ? provider.disabledMessage : '处理中…'}
                             />
                           ))}
                         </div>
