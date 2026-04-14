@@ -1,101 +1,124 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import AuthShell from '@/components/AuthShell';
+import { useT } from '@/lib/locale';
 
 function LoginForm() {
+  const t = useT();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') ?? '/billing';
+  const callbackUrl = searchParams.get('callbackUrl') ?? '/openclaw';
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const res = await signIn('credentials', {
+      const result = await signIn('credentials', {
         email,
         password,
         redirect: false,
       });
-      if (res?.error) {
-        setError('Invalid email or password');
+      if (result?.error) {
+        setError(t.auth.invalidCredentials);
         setLoading(false);
         return;
       }
       router.push(callbackUrl);
       router.refresh();
     } catch {
-      setError('Something went wrong');
+      setError(t.auth.genericError);
       setLoading(false);
     }
   };
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
-      <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
-        <h1 className="text-xl font-semibold text-gray-900">Sign in</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Sign in to purchase model credits.
-        </p>
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-            />
-          </div>
-          {error && (
-            <p className="text-sm text-red-600">{error}</p>
-          )}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-xl bg-primary-600 py-3 font-semibold text-white transition hover:bg-primary-700 disabled:opacity-50"
+    <AuthShell
+      mode="login"
+      title={t.auth.loginTitle}
+      subtitle={t.auth.loginSubtitle}
+      footer={
+        <p className="text-center text-sm text-slate-500">
+          {t.auth.noAccount}{' '}
+          <Link
+            href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+            className="font-semibold text-sky-700 transition hover:text-sky-800"
           >
-            {loading ? 'Signing in...' : 'Sign in'}
-          </button>
-        </form>
-        <p className="mt-4 text-center text-sm text-gray-500">
-          Don&apos;t have an account?{' '}
-          <Link href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`} className="font-medium text-primary-600 hover:text-primary-700">
-            Sign up
+            {t.auth.signUp}
           </Link>
         </p>
+      }
+    >
+      <div>
+        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">{t.auth.loginTitle}</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-500">{t.auth.loginSubtitle}</p>
       </div>
-    </div>
+
+      <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+            {t.auth.email}
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+            className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+          />
+        </div>
+        <div>
+          <div className="flex items-center justify-between gap-3">
+            <label htmlFor="password" className="block text-sm font-medium text-slate-700">
+              {t.auth.password}
+            </label>
+            <Link
+              href={`/forgot-password?callbackUrl=${encodeURIComponent(callbackUrl)}`}
+              className="text-sm font-medium text-sky-700 transition hover:text-sky-800"
+            >
+              {t.auth.forgotPassword}
+            </Link>
+          </div>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+          />
+        </div>
+
+        {error ? (
+          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            {error}
+          </div>
+        ) : null}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full rounded-2xl bg-slate-950 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
+        >
+          {loading ? t.auth.loginSubmitting : t.auth.loginSubmit}
+        </button>
+      </form>
+    </AuthShell>
   );
 }
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-gray-500">Loading...</div>}>
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-slate-500">Loading...</div>}>
       <LoginForm />
     </Suspense>
   );

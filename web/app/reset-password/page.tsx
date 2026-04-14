@@ -1,35 +1,39 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AuthShell from '@/components/AuthShell';
 import { useT } from '@/lib/locale';
 
-function RegisterForm() {
+function ResetForm() {
   const t = useT();
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') ?? '/openclaw';
-  const [email, setEmail] = useState('');
+  const tokenFromUrl = searchParams.get('token') ?? '';
+  const [token, setToken] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (tokenFromUrl) setToken(tokenFromUrl);
+  }, [tokenFromUrl]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError('');
     setLoading(true);
     try {
-      const response = await fetch('/api/account/register', {
+      const response = await fetch('/api/account/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name: name || undefined }),
+        body: JSON.stringify({ token, password }),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error ?? t.auth.registerError);
+        setError(typeof data.error === 'string' ? data.error : t.auth.resetFailed);
         setLoading(false);
         return;
       }
@@ -44,54 +48,43 @@ function RegisterForm() {
   return (
     <AuthShell
       mode="register"
-      title={t.auth.registerTitle}
-      subtitle={t.auth.registerSubtitle}
+      title={t.auth.resetTitle}
+      subtitle={t.auth.resetSubtitle}
       footer={
         <p className="text-center text-sm text-slate-500">
-          {t.auth.hasAccount}{' '}
           <Link
             href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`}
             className="font-semibold text-sky-700 transition hover:text-sky-800"
           >
-            {t.auth.signIn}
+            {t.auth.backToLogin}
           </Link>
         </p>
       }
     >
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">{t.auth.registerTitle}</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-500">{t.auth.registerSubtitle}</p>
+        <h2 className="text-2xl font-semibold tracking-tight text-slate-950">{t.auth.resetTitle}</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-500">{t.auth.resetSubtitle}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-            {t.auth.email}
+          <label htmlFor="token" className="block text-sm font-medium text-slate-700">
+            {t.auth.resetToken}
           </label>
           <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-            className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
-          />
-        </div>
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-slate-700">
-            {t.auth.name}
-          </label>
-          <input
-            id="name"
+            id="token"
             type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+            value={token}
+            onChange={(event) => setToken(event.target.value)}
+            required
+            autoComplete="off"
+            placeholder={t.auth.resetTokenPlaceholder}
+            className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 font-mono text-sm text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
           />
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-slate-700">
-            {t.auth.password}
+            {t.auth.newPassword}
           </label>
           <input
             id="password"
@@ -103,29 +96,27 @@ function RegisterForm() {
             className="mt-2 w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
           />
         </div>
-
         {error ? (
           <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
             {error}
           </div>
         ) : null}
-
         <button
           type="submit"
           disabled={loading}
           className="w-full rounded-2xl bg-slate-950 py-3.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50"
         >
-          {loading ? t.auth.registerSubmitting : t.auth.registerSubmit}
+          {loading ? t.auth.resetSubmitting : t.auth.resetSubmit}
         </button>
       </form>
     </AuthShell>
   );
 }
 
-export default function RegisterPage() {
+export default function ResetPasswordPage() {
   return (
     <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-slate-500">Loading...</div>}>
-      <RegisterForm />
+      <ResetForm />
     </Suspense>
   );
 }
