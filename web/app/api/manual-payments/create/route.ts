@@ -8,7 +8,7 @@ import type { PlanId } from '@/lib/constants';
 function makeMemo() {
   // short, human-friendly memo for transfer note
   const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return `OC-${rand}`;
+  return `MB-${rand}`;
 }
 
 export async function POST(request: Request) {
@@ -29,8 +29,8 @@ export async function POST(request: Request) {
           id: fallbackPlan.id,
           name: fallbackPlan.name,
           description: fallbackPlan.description,
-          price: Math.round(fallbackPlan.price * 100),
-          currency: fallbackPlan.currency,
+          price: Math.round(fallbackPlan.priceAUD * 100),
+          currency: 'CNY',
           credits: fallbackPlan.credits,
           isActive: true,
           popular: Boolean(fallbackPlan.popular),
@@ -56,8 +56,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       orderId: order.id,
       memo: order.reference,
-      amount: order.amount / 100,
-      currency: order.currency,
+      amountAUD: order.amount / 100,
       credits: order.credits,
       status: order.status,
       returnUrl: returnUrl ?? null,
@@ -67,4 +66,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
   }
 }
-

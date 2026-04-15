@@ -46,15 +46,15 @@ export default function HomeFooter() {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-500 to-violet-500 text-xs font-bold text-white shadow-lg shadow-indigo-200/70">
-                OC
+                MB
               </div>
               <div>
-                <span className="block text-[15px] font-semibold text-gray-900">OpenClaw</span>
+                <span className="block text-[15px] font-semibold text-gray-900">ModelBilling</span>
                 <span className="block text-xs text-slate-500">{t.footer.tagline}</span>
               </div>
             </div>
             <p className="mt-4 text-sm leading-6 text-slate-500">{t.footer.description}</p>
-            <p className="mt-4 text-sm leading-relaxed text-slate-400">&copy; {new Date().getFullYear()} OpenClaw</p>
+            <p className="mt-4 text-sm leading-relaxed text-slate-400">&copy; {new Date().getFullYear()} ModelBilling</p>
           </div>
 
           {groups.map((g) => (

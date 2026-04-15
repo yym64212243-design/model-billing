@@ -8,11 +8,7 @@ export type PlanId = 'plan_5' | 'plan_10' | 'plan_20' | 'plan_test_1c';
 export interface PlanItem {
   id: PlanId;
   name: string;
-  /** Legacy compatibility for checkout routes that still read `price`. */
-  price: number;
   priceAUD: number;
-  /** Legacy compatibility for payment/order routes. */
-  currency: 'AUD';
   credits: number;
   description: string;
   popular?: boolean;
@@ -24,39 +20,31 @@ export const PLANS: readonly PlanItem[] = [
   {
     id: 'plan_5',
     name: 'Starter',
-    price: 5,
     priceAUD: 5,
-    currency: 'AUD',
     credits: 500,
-    description: '500 Credits',
+    description: '500 积分',
   },
   {
     id: 'plan_10',
     name: 'Growth',
-    price: 10,
     priceAUD: 10,
-    currency: 'AUD',
     credits: 1100,
-    description: '1,100 Credits',
+    description: '1,100 积分',
     popular: true,
   },
   {
     id: 'plan_20',
     name: 'Pro',
-    price: 20,
     priceAUD: 20,
-    currency: 'AUD',
     credits: 2300,
-    description: '2,300 Credits',
+    description: '2,300 积分',
   },
   {
     id: 'plan_test_1c',
-    name: '测试 · 1 分 (AUD)',
-    price: 0.01,
+    name: '测试 · 1 分 (CNY)',
     priceAUD: 0.01,
-    currency: 'AUD',
     credits: 1,
-    description: '仅用于支付联调：0.01 AUD（约 1 澳分），非正式套餐',
+    description: '仅用于支付联调：0.01 元，非正式套餐',
     testOnly: true,
   },
 ];

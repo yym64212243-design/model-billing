@@ -49,8 +49,8 @@ export async function POST(request: Request) {
         }
       : {
           price_data: {
-            currency: plan.currency.toLowerCase(),
-            unit_amount: Math.round(plan.price * 100),
+            currency: 'cny',
+            unit_amount: Math.round(plan.priceAUD * 100),
             product_data: {
               name: plan.name,
               description: plan.description,

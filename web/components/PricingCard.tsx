@@ -3,27 +3,28 @@
 import type { PlanId, PlanItem } from '@/lib/constants';
 import { useT } from '@/lib/locale';
 
-export interface PaymentToggles {
+export type PaymentToggles = {
   zpay: boolean;
   alipayPage: boolean;
   alipayScan: boolean;
-}
+};
 
 interface PricingCardProps {
-  plan: PlanItem & { id: string };
+  plan: (PlanItem & { id: string }) | ((PlanItem & { id: string }) & { price?: number | null });
   onSelect?: (planId: PlanId) => void;
   ctaLabel?: string;
   disabled?: boolean;
   disabledLabel?: string;
   payments?: PaymentToggles;
   busy?: boolean;
-  onZpayRedirect?: (planId: PlanId) => void;
-  onZpayQr?: (planId: PlanId) => void;
-  onAlipayPage?: (planId: PlanId) => void;
-  onAlipayScan?: (planId: PlanId) => void;
+  onZpayRedirect?: (planId: PlanId) => void | Promise<void>;
+  onZpayQr?: (planId: PlanId) => void | Promise<void>;
+  onAlipayPage?: (planId: PlanId) => void | Promise<void>;
+  onAlipayScan?: (planId: PlanId) => void | Promise<void>;
 }
 
-function formatAud(price: number) {
+function formatAud(price?: number | null) {
+  if (typeof price !== 'number' || Number.isNaN(price)) return '—';
   if (price < 1) return price.toFixed(2);
   if (Number.isInteger(price)) return String(price);
   return price.toFixed(2);
@@ -44,20 +45,26 @@ export default function PricingCard({
 }: PricingCardProps) {
   const t = useT();
   const isTest = Boolean(plan.testOnly || plan.id === 'plan_test_1c');
-  const paymentActions = [
-    payments?.alipayPage && onAlipayPage
-      ? { label: '支付宝跳转', action: onAlipayPage, style: 'bg-slate-950 text-white hover:bg-slate-800' }
-      : null,
-    payments?.alipayScan && onAlipayScan
-      ? { label: '支付宝扫码', action: onAlipayScan, style: 'bg-amber-50 text-amber-900 hover:bg-amber-100' }
-      : null,
-    payments?.zpay && onZpayRedirect
-      ? { label: 'ZPAY 跳转', action: onZpayRedirect, style: 'bg-sky-50 text-sky-900 hover:bg-sky-100' }
-      : null,
-    payments?.zpay && onZpayQr
-      ? { label: 'ZPAY 扫码', action: onZpayQr, style: 'bg-emerald-50 text-emerald-900 hover:bg-emerald-100' }
-      : null,
-  ].filter(Boolean) as Array<{ label: string; action: (planId: PlanId) => void; style: string }>;
+  const legacyPrice =
+    'price' in plan && typeof plan.price === 'number' && !Number.isNaN(plan.price)
+      ? plan.price
+      : null;
+  const displayPrice = typeof plan.priceAUD === 'number' ? plan.priceAUD : legacyPrice;
+  const noPaymentOptions =
+    !onSelect &&
+    !payments?.zpay &&
+    !payments?.alipayPage &&
+    !payments?.alipayScan;
+  const isDisabled = disabled || busy || noPaymentOptions;
+
+  const handleClick = () => {
+    const planId = plan.id as PlanId;
+    if (payments?.zpay && onZpayRedirect) return onZpayRedirect(planId);
+    if (payments?.zpay && onZpayQr) return onZpayQr(planId);
+    if (payments?.alipayPage && onAlipayPage) return onAlipayPage(planId);
+    if (payments?.alipayScan && onAlipayScan) return onAlipayScan(planId);
+    return onSelect?.(planId);
+  };
 
   return (
     <div
@@ -80,42 +87,26 @@ export default function PricingCard({
       <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
       <p className="mt-1 text-sm text-gray-500">{plan.description}</p>
       <div className="mt-4 flex items-baseline">
-        <span className="text-2xl font-bold text-gray-900">${formatAud(plan.priceAUD)}</span>
+        <span className="text-2xl font-bold text-gray-900">¥{formatAud(displayPrice)}</span>
         <span className="ml-1 text-gray-500">{t.pricingCard.aud}</span>
       </div>
-      {paymentActions.length > 0 ? (
-        <div className="mt-6 grid gap-2">
-          {paymentActions.map((item) => (
-            <button
-              key={item.label}
-              type="button"
-              onClick={() => item.action(plan.id as PlanId)}
-              disabled={disabled || busy}
-              className={`w-full rounded-xl py-3 text-sm font-semibold transition ${
-                disabled || busy ? 'cursor-not-allowed bg-gray-100 text-gray-400' : item.style
-              }`}
-            >
-              {busy ? '处理中…' : item.label}
-            </button>
-          ))}
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => onSelect?.(plan.id as PlanId)}
-          disabled={disabled || !onSelect}
-          className={`
-            mt-6 w-full rounded-xl py-3 text-sm font-semibold transition
-            ${disabled || !onSelect
-              ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-              : plan.popular
-                ? 'bg-primary-600 text-white hover:bg-primary-700'
-                : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}
-          `}
-        >
-          {disabled || !onSelect ? (disabledLabel ?? t.pricingCard.comingSoon) : (ctaLabel ?? t.pricingCard.getCredits)}
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={isDisabled}
+        className={`
+          mt-6 w-full rounded-xl py-3 text-sm font-semibold transition
+          ${isDisabled
+            ? 'cursor-not-allowed bg-gray-100 text-gray-400'
+            : plan.popular
+              ? 'bg-primary-600 text-white hover:bg-primary-700'
+              : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}
+        `}
+      >
+        {isDisabled
+          ? (busy ? '处理中...' : (disabledLabel ?? t.pricingCard.comingSoon))
+          : (ctaLabel ?? t.pricingCard.getCredits)}
+      </button>
     </div>
   );
 }

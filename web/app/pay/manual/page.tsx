@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { getPurchaseProvider } from '@/lib/providers';
 
 type OrderInfo = {
   id: string;
@@ -19,6 +20,7 @@ function ManualPayContent() {
   const sp = useSearchParams();
   const orderId = sp.get('order');
   const returnUrl = sp.get('return_url');
+  const provider = getPurchaseProvider(sp.get('provider'));
 
   const [order, setOrder] = useState<OrderInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -79,6 +81,11 @@ function ManualPayContent() {
           Transfer the exact amount using Alipay or WeChat. Put the <span className="font-semibold">memo</span> in the payment note.
           After you pay, we will confirm manually and your credits will be added.
         </p>
+        {provider && (
+          <div className="mt-4 inline-flex rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-700">
+            Current package: {provider.name}
+          </div>
+        )}
 
         {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
 
@@ -94,12 +101,18 @@ function ManualPayContent() {
             </div>
             <div>
               <p className="text-xs font-medium text-gray-500">Amount</p>
-              <p className="text-sm font-semibold text-gray-900">${order.amountAUD} AUD</p>
+              <p className="text-sm font-semibold text-gray-900">¥{order.amountAUD} CNY</p>
             </div>
             <div>
               <p className="text-xs font-medium text-gray-500">Credits</p>
               <p className="text-sm font-semibold text-gray-900">{order.credits.toLocaleString()} Credits</p>
             </div>
+            {provider && (
+              <div>
+                <p className="text-xs font-medium text-gray-500">Provider</p>
+                <p className="text-sm font-semibold text-gray-900">{provider.name}</p>
+              </div>
+            )}
             <div className="sm:col-span-2">
               <p className="text-xs font-medium text-gray-500">Memo (must include)</p>
               <p className="mt-1 inline-flex rounded-lg bg-white px-3 py-2 font-mono text-sm font-semibold text-gray-900 ring-1 ring-gray-200">
@@ -151,4 +164,3 @@ export default function ManualPayPage() {
     </div>
   );
 }
-

@@ -18,7 +18,7 @@ export const messages = {
       loginTitle: '登录',
       loginSubtitle: '登录后即可购买积分、管理 API Keys，并查看用量。',
       registerTitle: '创建账户',
-      registerSubtitle: '注册后即可进入 OpenClaw 控制台，完成充值和密钥配置。',
+      registerSubtitle: '注册后即可进入 ModelBilling 控制台，完成充值和密钥配置。',
       email: '邮箱',
       password: '密码',
       name: '昵称（可选）',
@@ -56,7 +56,7 @@ export const messages = {
       highlights: [
         '统一管理积分、API Keys 和最近请求记录。',
         '每把密钥都可以单独创建、标记和撤销。',
-        '与 OpenClaw 网关打通，购买后即可开始调用。'
+        '与 ModelBilling 网关打通，购买后即可开始调用。'
       ],
       afterLoginTitle: '登录后你可以立即做的事',
       afterLoginItems: [
@@ -71,7 +71,7 @@ export const messages = {
       activity: '活动',
       credits: '积分',
       signOut: '退出登录',
-      mobileTitle: 'OpenClaw',
+      mobileTitle: 'ModelBilling',
       workspaceLabel: '用户中心',
       workspaceHint: '积分、密钥与用量',
       topUpAction: '充值积分',
@@ -194,7 +194,7 @@ export const messages = {
     pricingCard: {
       popular: '热门',
       getCredits: '购买积分',
-      aud: 'AUD',
+      aud: '元',
       testBadge: '测试',
       comingSoon: '即将开放',
     },
@@ -233,7 +233,7 @@ export const messages = {
       company: '公司',
       contact: '联系',
       tagline: '统一 AI 网关',
-      description: '为 OpenClaw 用户提供积分、模型访问和 API 密钥管理的一站式入口。',
+      description: '为 ModelBilling 用户提供积分、模型访问和 API 密钥管理的一站式入口。',
       modelList: '模型列表',
       pricing: '定价',
       apiKeys: 'API Keys',
@@ -321,7 +321,7 @@ export const messages = {
       loginTitle: 'Sign in',
       loginSubtitle: 'Sign in to buy credits, manage API keys, and review usage from one workspace.',
       registerTitle: 'Create account',
-      registerSubtitle: 'Create your account to enter the OpenClaw workspace and start with credits plus keys.',
+      registerSubtitle: 'Create your account to enter the ModelBilling workspace and start with credits plus keys.',
       email: 'Email',
       password: 'Password',
       name: 'Name (optional)',
@@ -359,7 +359,7 @@ export const messages = {
       highlights: [
         'Manage credits, API keys, and recent requests in one place.',
         'Create, label, and revoke each key independently.',
-        'Works directly with the OpenClaw gateway, so you can start calling right after setup.'
+        'Works directly with the ModelBilling gateway, so you can start calling right after setup.'
       ],
       afterLoginTitle: 'What you can do right away',
       afterLoginItems: [
@@ -374,7 +374,7 @@ export const messages = {
       activity: 'Activity',
       credits: 'Credits',
       signOut: 'Sign out',
-      mobileTitle: 'OpenClaw',
+      mobileTitle: 'ModelBilling',
       workspaceLabel: 'Workspace',
       workspaceHint: 'Credits, keys, and usage',
       topUpAction: 'Top up credits',
@@ -497,7 +497,7 @@ export const messages = {
     pricingCard: {
       popular: 'Popular',
       getCredits: 'Get credits',
-      aud: 'AUD',
+      aud: '元',
       testBadge: 'Test',
       comingSoon: 'Coming soon',
     },
@@ -536,7 +536,7 @@ export const messages = {
       company: 'Company',
       contact: 'Contact',
       tagline: 'Unified AI gateway',
-      description: 'One place for OpenClaw users to manage credits, model access, and API keys.',
+      description: 'One place for ModelBilling users to manage credits, model access, and API keys.',
       modelList: 'Model list',
       pricing: 'Pricing',
       apiKeys: 'API Keys',

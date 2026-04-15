@@ -49,7 +49,7 @@ export default async function AdminPaymentsPage() {
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                     <span className="font-mono text-xs text-gray-600">{o.reference ?? '-'}</span>
                     <span className="text-sm font-semibold text-gray-900">
-                      ${(o.currency.toLowerCase() === 'aud' ? o.amount / 100 : o.amount / 100).toFixed(2)}{' '}
+                      ¥{(o.amount / 100).toFixed(2)}{' '}
                       {o.currency} → {o.credits.toLocaleString()} credits
                     </span>
                   </div>
@@ -76,4 +76,3 @@ export default async function AdminPaymentsPage() {
     </div>
   );
 }
-

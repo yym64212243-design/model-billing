@@ -66,10 +66,10 @@ export default function DashboardSidebar() {
         <div className="flex items-center justify-between gap-2">
           <Link href="/openclaw" className="flex min-w-0 items-center gap-2.5">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-500 to-violet-500 text-sm font-bold text-white shadow-lg shadow-indigo-200/70">
-              OC
+              MB
             </div>
             <div className="min-w-0">
-              <span className="block truncate text-lg font-semibold tracking-tight">OpenClaw</span>
+              <span className="block truncate text-lg font-semibold tracking-tight">ModelBilling</span>
               <span className="block truncate text-xs text-slate-500">{t.sidebar.workspaceHint}</span>
             </div>
           </Link>

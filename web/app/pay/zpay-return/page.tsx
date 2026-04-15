@@ -8,10 +8,10 @@ export default function ZpayReturnPage() {
         若您已完成付款，积分将在平台异步通知确认后到账；请勿重复支付。您可返回账单页查看余额。
       </p>
       <Link
-        href="/billing"
+        href="/openclaw/credits"
         className="mt-6 rounded-xl bg-primary-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary-700"
       >
-        返回账单
+        返回积分中心
       </Link>
     </div>
   );

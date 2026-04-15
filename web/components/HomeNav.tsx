@@ -23,11 +23,11 @@ export default function HomeNav() {
           className="link-focus flex shrink-0 items-center gap-3 rounded-md"
         >
           <div className="nav-logo-mark flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-500 to-violet-500 text-sm font-bold text-white shadow-lg shadow-indigo-200/70">
-            OC
+            MB
           </div>
           <div className="min-w-0">
             <span className="block text-[17px] font-semibold tracking-tight text-gray-900">
-              OpenClaw
+              ModelBilling
             </span>
             <span className="hidden text-xs text-slate-500 lg:block">{t.nav.status}</span>
           </div>

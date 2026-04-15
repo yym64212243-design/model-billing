@@ -12,7 +12,7 @@ export default function SourceBadge({ source, host, path }: SourceBadgeProps) {
 
   return (
     <p className="text-center text-sm text-gray-500">
-      You opened billing from another app
+      You are coming from a ModelBilling context
       {host && (
         <span className="ml-1 text-gray-400">
           ({host}

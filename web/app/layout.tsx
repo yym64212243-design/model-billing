@@ -3,8 +3,8 @@ import './globals.css';
 import Providers from '@/components/Providers';
 
 export const metadata: Metadata = {
-  title: 'OpenClaw',
-  description: 'Unified billing, API key management, and usage tracking for OpenClaw users.',
+  title: 'ModelBilling',
+  description: 'Unified billing, API key management, and usage tracking for ModelBilling users.',
 };
 
 export default function RootLayout({

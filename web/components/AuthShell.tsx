@@ -35,10 +35,10 @@ export default function AuthShell({
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="inline-flex items-center gap-3 rounded-xl px-2 py-2 text-slate-900">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 via-indigo-500 to-violet-500 text-sm font-bold text-white shadow-lg shadow-indigo-200/70">
-              OC
+              MB
             </div>
             <div>
-              <p className="text-base font-semibold tracking-tight">OpenClaw</p>
+              <p className="text-base font-semibold tracking-tight">ModelBilling</p>
               <p className="text-xs text-slate-500">{t.nav.status}</p>
             </div>
           </Link>
